@@ -3,8 +3,13 @@ package com.example.administrator.myapplication;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import com.example.administrator.myapplication.retrofit.Contributor;
+import com.example.administrator.myapplication.retrofit.GitHub;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +18,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             temperature.setText(weatherBean.getTemperature() + "");
             System.out.println("test2");
         }
+
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -102,5 +116,36 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void myretrofit(View view){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(new OkHttpClient())
+                .build();
+        GitHub gitHubService = retrofit.create(GitHub.class);
+        Call<List<Contributor>> call = gitHubService.contributors("square", "retrofit");
+       // Call<List<Contributor>> call1 = call.clone();
+// 5. 请求网络，异步
+        call.enqueue(new Callback<List<Contributor>>() {
+            @Override
+            public void onResponse(Response<List<Contributor>> response, Retrofit retrofit) {
+                String a= response.body().get(0).login;
+                int b=response.body().get(0).contributions;
+                 temperature.setText(a);
+                humidity.setText(b+"");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+       /* try{
+            Response<List<Contributor>> response = call.execute(); // 同步
+            Log.d("mytag", "response:" + response.body().toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 }
