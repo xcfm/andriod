@@ -1,10 +1,14 @@
 package com.example.administrator.myapplication;
 
+import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import com.squareup.okhttp.OkHttpClient;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +18,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
+
+public class MainActivity extends Activity {
 
          private EditText location, country, temperature, humidity, pressure;
 
@@ -91,16 +101,43 @@ public class MainActivity extends AppCompatActivity {
 
     public void open(View view) {
 
-        try {
-            String url1 = "api.openweathermap.org/data/2.5/weather?q="+location.getText().toString()+",uk&appid=44db6a862fba0b067b1930da0d769e98";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.openweathermap.org")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(new OkHttpClient())
+                .build();
+        OpenWeather openWeather = retrofit.create(OpenWeather.class);
+        String a=location.getText().toString();
+        String api ="44db6a862fba0b067b1930da0d769e98";
+        //Call<JSONObject> call = openWeather.weather("london","44db6a862fba0b067b1930da0d769e98");
+        Call<JSONObject> call =openWeather.weather(a,api);
+        // Call<List<Contributor>> call1 = call.clone();
+// 5. 请求网络，异步
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Response<JSONObject> response, Retrofit retrofit) {
+                System.out.print(response.body().toString()+"huoqudaoshuju");
+                WeatherBean weatherBean = JSONUtil.getWeatherBean(response.body().toString());
+                country.setText(weatherBean.getCountry());
+                humidity.setText(weatherBean.getHumidity() + "");
+                pressure.setText(weatherBean.getPressure() + "");
+                temperature.setText(weatherBean.getTemperature() + "");
+                System.out.println("test2");
+            }
 
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+       /* try {
+            String url1 = "api.openweathermap.org/data/2.5/weather?q="+location.getText().toString()+",uk&appid=44db6a862fba0b067b1930da0d769e98";
             URL url = new URL("http://"+url1);
             System.out.println(url);
             new MyAsycTask().execute("http://"+url1);
-
-
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
