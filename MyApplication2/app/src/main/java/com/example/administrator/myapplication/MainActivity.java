@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.administrator.myapplication.retrofit.APIService;
 import com.example.administrator.myapplication.retrofit.Contributor;
@@ -29,6 +30,11 @@ import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     String apiKey = "c26d0b090a494726ab3957852cffa60b";
@@ -109,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void open(View view) {
-
-        try {
+            getByRxJava();
+       /* try {
             String url1 = "api.openweathermap.org/data/2.5/weather?q="+location.getText().toString()+",uk&appid=44db6a862fba0b067b1930da0d769e98";
             URL url = new URL("http://"+url1);
             System.out.println(url);
@@ -119,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
     public void maladroit(View view){
         get();
@@ -156,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         APIService service = retrofit.create(APIService.class);
        String city =location.getText().toString();
         //  String city ="合肥";
-        service.loadeather(city, apiKey).enqueue(new Callback<Weather>() {
+        service.loadweather(city, apiKey).enqueue(new Callback<Weather>() {
             @Override
             public void onResponse(Response<Weather> response, Retrofit retrofit) {
                 if (response.body() != null) {
@@ -177,5 +183,43 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("fmz", "onFailure: ", t);
             }
         });
+    }
+    private void getByRxJava() {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        APIService service = retrofit.create(APIService.class);
+        Observable<Weather> observable = service.getWeatherData("合肥", apiKey);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Weather>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i("fmz", "onCompleted: ");
+                        Toast.makeText(getApplicationContext(),
+                                "获取完毕",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("fmz", "onError: ", e);
+                        Toast.makeText(getApplicationContext(),
+                                "Error:" + e.getMessage(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onNext(Weather weather) {
+                        Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
+                        Log.i("fmz", "onNext: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
+                        Toast.makeText(MainActivity.this, "明天:" + weather.getResult().getFuture().get(0).getWeek() + " 温度:" + weather.getResult().getFuture().get(0).getTemperature(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
     }
 }
