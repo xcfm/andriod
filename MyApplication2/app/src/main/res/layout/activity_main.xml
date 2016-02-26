@@ -19,9 +19,9 @@
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:ems="10" />
 
     <TextView
         android:id="@+id/textView2"
@@ -66,10 +66,9 @@
         android:id="@+id/editText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_above="@+id/textView3"
         android:layout_toRightOf="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3">
+        android:ems="10" >
 
         <requestFocus />
     </EditText>
@@ -87,10 +86,9 @@
         android:id="@+id/editText4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2" />
+        android:layout_above="@+id/textView5"
+        android:layout_alignLeft="@+id/editText1"
+        android:ems="10" />
 
     <EditText
         android:id="@+id/editText5"
@@ -105,20 +103,10 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_below="@+id/editText1"
         android:onClick="open"
-        android:text="@string/weather"
-        android:layout_alignBottom="@+id/editText1"
-        android:layout_toRightOf="@+id/button2"
-        android:layout_toEndOf="@+id/button2" />
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="myretrofit"
-        android:text="button2"
-        android:layout_below="@+id/editText5"
-        android:layout_alignRight="@+id/editText3"
-        android:layout_alignEnd="@+id/editText3" />
+        android:text="@string/weather" />
     <!--<ListView
         android:id="@+id/listview_main"
         android:background="#ebebeb"

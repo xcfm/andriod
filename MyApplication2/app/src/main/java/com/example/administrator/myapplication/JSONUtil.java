@@ -10,30 +10,28 @@ public class JSONUtil {
     public static WeatherBean getWeatherBean(String s){
 
         String jsonText = s;
+
         WeatherBean weather = new WeatherBean();
-        if(!jsonText.equals(null)) {
-            try {
-                JSONObject weatherJSONObject = new JSONObject(jsonText);
-                JSONObject sysJSONObject = weatherJSONObject.getJSONObject("sys");
-                String country = sysJSONObject.getString("country");
-                JSONObject mainJSONObject = weatherJSONObject.getJSONObject("main");
-                int temperature = mainJSONObject.getInt("temp");
-                int pressure = mainJSONObject.getInt("pressure");
-                int humidity = mainJSONObject.getInt("humidity");
 
-                weather.setCountry(country);
-                weather.setTemperature(temperature);
-                weather.setHumidity(humidity);
-                weather.setPressure(pressure);
-            } catch (JSONException e) {
-                System.out.println("test");
-                e.printStackTrace();
-            }
+        try {
+            JSONObject weatherJSONObject = new JSONObject(jsonText);
 
-            return weather;
+            JSONObject sysJSONObject = weatherJSONObject.getJSONObject("sys");
+            String country = sysJSONObject.getString("country");
+            JSONObject mainJSONObject = weatherJSONObject.getJSONObject("main");
+            int temperature = mainJSONObject.getInt("temp");
+            int pressure = mainJSONObject.getInt("pressure");
+            int humidity = mainJSONObject.getInt("humidity");
+
+            weather.setCountry(country);
+            weather.setTemperature(temperature);
+            weather.setHumidity(humidity);
+            weather.setPressure(pressure);
+        } catch (JSONException e) {
+            System.out.println("test");
+            e.printStackTrace();
         }
-        else{
-            return null;
-        }
+
+        return weather;
     }
 }
