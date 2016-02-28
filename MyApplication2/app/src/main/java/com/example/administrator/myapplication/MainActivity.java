@@ -9,12 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.retrofit.APIService;
-import com.example.administrator.myapplication.retrofit.Contributor;
-import com.example.administrator.myapplication.retrofit.GitHub;
-import com.example.administrator.myapplication.retrofit.OpenWeather;
-import com.squareup.okhttp.OkHttpClient;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,24 +28,26 @@ import retrofit.RxJavaCallAdapterFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     String apiKey = "c26d0b090a494726ab3957852cffa60b";
     String baseUrl = "http://apis.haoservice.com/";
-         private EditText location, country, temperature, humidity, pressure;
+    private EditText location, country, temperature, humidity, pressure;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-            location = (EditText) findViewById(R.id.editText1);
-            country = (EditText) findViewById(R.id.editText2);
-            temperature = (EditText) findViewById(R.id.editText3);
-            humidity = (EditText) findViewById(R.id.editText4);
-            pressure = (EditText) findViewById(R.id.editText5);
-        }
-    class  MyAsycTask extends AsyncTask<String,Void,String>{
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        location = (EditText) findViewById(R.id.editText1);
+        country = (EditText) findViewById(R.id.editText2);
+        temperature = (EditText) findViewById(R.id.editText3);
+        humidity = (EditText) findViewById(R.id.editText4);
+        pressure = (EditText) findViewById(R.id.editText5);
+    }
+
+   /* class MyAsycTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -65,18 +61,17 @@ public class MainActivity extends AppCompatActivity {
             country.setText(weatherBean.getCountry());
             humidity.setText(weatherBean.getHumidity() + "");
             pressure.setText(weatherBean.getPressure() + "");
-            temperature.setText((weatherBean.getTemperature()-273) + "");
+            temperature.setText((weatherBean.getTemperature() - 273) + "");
             System.out.println("test2");
         }
 
 
-
         @Override
         protected String doInBackground(String... params) {
-            InputStream is =null;
+            InputStream is = null;
             BufferedReader in = null;
-            String jsonText="";
-            URL url= null;
+            String jsonText = "";
+            URL url = null;
             try {
                 url = new URL(params[0]);
             } catch (MalformedURLException e) {
@@ -85,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setReadTimeout(10000 *//* milliseconds *//*);
+                conn.setConnectTimeout(15000 *//* milliseconds *//*);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.connect();
@@ -94,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 is = conn.getInputStream();
                 in = new BufferedReader(new InputStreamReader(is));
                 String line = "";
-                while((line = in.readLine()) != null){
+                while ((line = in.readLine()) != null) {
                     jsonText += line;
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 try {
                     in.close();
                     is.close();
@@ -113,9 +108,9 @@ public class MainActivity extends AppCompatActivity {
             return jsonText;
         }
     }
-
+*/
     public void open(View view) {
-            getByRxJava();
+        getByRxJava();
        /* try {
             String url1 = "api.openweathermap.org/data/2.5/weather?q="+location.getText().toString()+",uk&appid=44db6a862fba0b067b1930da0d769e98";
             URL url = new URL("http://"+url1);
@@ -127,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }*/
     }
-    public void maladroit(View view){
+
+    public void maladroit(View view) {
         get();
       /*  Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.github.com")
@@ -154,15 +150,66 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }*/
     }
+
     private void get() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-       String city =location.getText().toString();
+        String city = location.getText().toString();
         //  String city ="合肥";
-        service.loadweather(city, apiKey).enqueue(new Callback<Weather>() {
+        Observable<Weather> observable = service.getWeatherData(city, apiKey);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(new Func1<Weather, Boolean>() {
+                    @Override
+                    public Boolean call(Weather weather) {
+                        if(weather.getReason().equals("成功"))
+                        {
+                            Toast.makeText(getApplicationContext(),
+                                    "获取完毕",
+                                    Toast.LENGTH_SHORT)
+                                    .show();}
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    "获取失败",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        return weather.getReason().equals("成功");
+                    }
+                })
+                .subscribe(new Subscriber<Weather>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i("fmz", "onCompleted: ");
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("fmz", "onError: ", e);
+                        Toast.makeText(getApplicationContext(),
+                                "Error:" + e.getMessage(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onNext(Weather weather) {
+                        Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
+                        Log.i("fmz", "onNext: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
+                        //Toast.makeText(MainActivity.this, "明天:" + weather.getResult().getFuture().get(0).getWeek() + " 温度:" + weather.getResult().getFuture().get(0).getTemperature(), Toast.LENGTH_SHORT).show();
+
+                        country.setText(todayEntiry.getCity());
+                        temperature.setText(weather.getResult().getSk().getTemp());
+                        humidity.setText(todayEntiry.getTemperature());
+                        pressure.setText(todayEntiry.getWeather());
+                    }
+                });
+        /*service.loadweather(city, apiKey).enqueue(new Callback<Weather>() {
             @Override
             public void onResponse(Response<Weather> response, Retrofit retrofit) {
                 if (response.body() != null) {
@@ -182,8 +229,9 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Throwable t) {
                 Log.e("fmz", "onFailure: ", t);
             }
-        });
+        });*/
     }
+
     private void getByRxJava() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -191,17 +239,34 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-        Observable<Weather> observable = service.getWeatherData("合肥", apiKey);
+        String city = location.getText().toString();
+        //  String city ="合肥";
+        Observable<Weather> observable = service.getWeatherData(city, apiKey);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .filter(new Func1<Weather, Boolean>() {
+                    @Override
+                    public Boolean call(Weather weather) {
+                        if(weather.getReason().equals("成功"))
+                        {
+                        Toast.makeText(getApplicationContext(),
+                                "获取完毕",
+                                Toast.LENGTH_SHORT)
+                                .show();}
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    "获取失败",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        return weather.getReason().equals("成功");
+                    }
+                })
                 .subscribe(new Subscriber<Weather>() {
                     @Override
                     public void onCompleted() {
                         Log.i("fmz", "onCompleted: ");
-                        Toast.makeText(getApplicationContext(),
-                                "获取完毕",
-                                Toast.LENGTH_SHORT)
-                                .show();
+
                     }
 
                     @Override

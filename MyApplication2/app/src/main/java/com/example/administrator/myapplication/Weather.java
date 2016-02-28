@@ -13,7 +13,7 @@ public class Weather {
      * result : {"sk":{"temp":"8","wind_direction":"西北风","wind_strength":"2级","humidity":"94","time":"20:38"},"today":{"city":"杭州","date_y":"2015年12月20日","week":"星期日","temperature":"6~12","weather":"小雨","fa":"07","fb":"02","wind":"东风 微风","dressing_index":"较冷","dressing_advice":"建议着厚外套加毛衣等服装。年老体弱者宜着大衣、呢外套加羊毛衫。","uv_index":"最弱","comfort_index":"--","wash_index":"不宜","travel_index":"较不宜","exercise_index":"较不宜","drying_index":"--"},"future":[{"temperature":"8~12","weather":"多云","fa":"01","fb":"02","wind":"无持续风向 微风","week":"星期一","date":"20151221"},{"temperature":"9~12","weather":"中雨","fa":"08","fb":"08","wind":"东风 微风","week":"星期二","date":"20151222"},{"temperature":"9~11","weather":"小雨","fa":"07","fb":"07","wind":"东北风 微风","week":"星期三","date":"20151223"},{"temperature":"5~11","weather":"小雨","fa":"07","fb":"07","wind":"北风 微风","week":"星期四","date":"20151224"},{"temperature":"2~9","weather":"阴","fa":"02","fb":"01","wind":"西北风 微风","week":"星期五","date":"20151225"},{"temperature":"1~9","weather":"晴","fa":"00","fb":"01","wind":"东北风 微风","week":"星期六","date":"20151226"}]}
      */
 
-    private int error_code;
+     int error_code;
     private String reason;
     /**
      * sk : {"temp":"8","wind_direction":"西北风","wind_strength":"2级","humidity":"94","time":"20:38"}
