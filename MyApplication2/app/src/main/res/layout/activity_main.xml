@@ -119,6 +119,14 @@
         android:layout_below="@+id/editText5"
         android:layout_alignRight="@+id/editText3"
         android:layout_alignEnd="@+id/editText3" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/button2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <!--<ListView
         android:id="@+id/listview_main"
         android:background="#ebebeb"

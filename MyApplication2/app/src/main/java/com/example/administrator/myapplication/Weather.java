@@ -87,7 +87,7 @@ public class Weather {
          * date : 20151221
          */
 
-        private List<FutureEntity> future;
+        public List<FutureEntity> future;
 
         public void setSk(SkEntity sk) {
             this.sk = sk;

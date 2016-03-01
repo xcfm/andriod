@@ -1,28 +1,19 @@
 package com.example.administrator.myapplication;
 
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.retrofit.APIService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.Callback;
 import retrofit.GsonConverterFactory;
-import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 import rx.Observable;
@@ -34,7 +25,10 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     String apiKey = "c26d0b090a494726ab3957852cffa60b";
     String baseUrl = "http://apis.haoservice.com/";
+    private ListView listView;
+    private List<Bean> Futures;
     private EditText location, country, temperature, humidity, pressure;
+    private MyAdapter madaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,42 +39,43 @@ public class MainActivity extends AppCompatActivity {
         temperature = (EditText) findViewById(R.id.editText3);
         humidity = (EditText) findViewById(R.id.editText4);
         pressure = (EditText) findViewById(R.id.editText5);
+        listView = (ListView) findViewById(R.id.listView);
     }
 
-   /* class MyAsycTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            System.out.print("异步线程开始");
-        }
+    /* class MyAsycTask extends AsyncTask<String, Void, String> {
+         @Override
+         protected void onPreExecute() {
+             super.onPreExecute();
+             System.out.print("异步线程开始");
+         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            WeatherBean weatherBean = JSONUtil.getWeatherBean(s);
-            country.setText(weatherBean.getCountry());
-            humidity.setText(weatherBean.getHumidity() + "");
-            pressure.setText(weatherBean.getPressure() + "");
-            temperature.setText((weatherBean.getTemperature() - 273) + "");
-            System.out.println("test2");
-        }
+         @Override
+         protected void onPostExecute(String s) {
+             super.onPostExecute(s);
+             WeatherBean weatherBean = JSONUtil.getWeatherBean(s);
+             country.setText(weatherBean.getCountry());
+             humidity.setText(weatherBean.getHumidity() + "");
+             pressure.setText(weatherBean.getPressure() + "");
+             temperature.setText((weatherBean.getTemperature() - 273) + "");
+             System.out.println("test2");
+         }
 
 
-        @Override
-        protected String doInBackground(String... params) {
-            InputStream is = null;
-            BufferedReader in = null;
-            String jsonText = "";
-            URL url = null;
-            try {
-                url = new URL(params[0]);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+         @Override
+         protected String doInBackground(String... params) {
+             InputStream is = null;
+             BufferedReader in = null;
+             String jsonText = "";
+             URL url = null;
+             try {
+                 url = new URL(params[0]);
+             } catch (MalformedURLException e) {
+                 e.printStackTrace();
+             }
 
-            try {
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 *//* milliseconds *//*);
+             try {
+                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                 conn.setReadTimeout(10000 *//* milliseconds *//*);
                 conn.setConnectTimeout(15000 *//* milliseconds *//*);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
@@ -166,13 +161,12 @@ public class MainActivity extends AppCompatActivity {
                 .filter(new Func1<Weather, Boolean>() {
                     @Override
                     public Boolean call(Weather weather) {
-                        if(weather.getReason().equals("成功"))
-                        {
+                        if (weather.getReason().equals("成功")) {
                             Toast.makeText(getApplicationContext(),
                                     "获取完毕",
                                     Toast.LENGTH_SHORT)
-                                    .show();}
-                        else {
+                                    .show();
+                        } else {
                             Toast.makeText(getApplicationContext(),
                                     "获取失败",
                                     Toast.LENGTH_SHORT)
@@ -200,13 +194,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Weather weather) {
                         Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
-                        Log.i("fmz", "onNext: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
-                        //Toast.makeText(MainActivity.this, "明天:" + weather.getResult().getFuture().get(0).getWeek() + " 温度:" + weather.getResult().getFuture().get(0).getTemperature(), Toast.LENGTH_SHORT).show();
+                        Log.i("fmz", "onNext: 城市:" + weather.getResult().getFuture().get(0).getTemperature() + " 温度:" + todayEntiry.getTemperature());
 
+                        //Toast.makeText(MainActivity.this, "明天:" + weather.getResult().getFuture().get(0).getWeek() + " 温度:" + weather.getResult().getFuture().get(0).getTemperature(), Toast.LENGTH_SHORT).show();
+                        Futures = new ArrayList<Bean>();
+                        for (int i = 0; i < 6; i++) {
+                            Bean bean = new Bean(weather, i);
+
+                            Futures.add(bean);
+                        }
+                        madaper = new MyAdapter(getBaseContext(), Futures);
+                        listView.setAdapter(madaper);
                         country.setText(todayEntiry.getCity());
                         temperature.setText(weather.getResult().getSk().getTemp());
                         humidity.setText(todayEntiry.getTemperature());
                         pressure.setText(todayEntiry.getWeather());
+
                     }
                 });
         /*service.loadweather(city, apiKey).enqueue(new Callback<Weather>() {
@@ -247,13 +250,12 @@ public class MainActivity extends AppCompatActivity {
                 .filter(new Func1<Weather, Boolean>() {
                     @Override
                     public Boolean call(Weather weather) {
-                        if(weather.getReason().equals("成功"))
-                        {
-                        Toast.makeText(getApplicationContext(),
-                                "获取完毕",
-                                Toast.LENGTH_SHORT)
-                                .show();}
-                        else {
+                        if (weather.getReason().equals("成功")) {
+                            Toast.makeText(getApplicationContext(),
+                                    "获取完毕",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
                             Toast.makeText(getApplicationContext(),
                                     "获取失败",
                                     Toast.LENGTH_SHORT)
