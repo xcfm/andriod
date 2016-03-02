@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\instantRunSlicer\debug\jars\1\1a\dependencies.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="57fc7d8f847d287b7bc07d086e53726b15bba5ea">
+        <dex dex="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\dex\debug\folders\1000\1a\dependencies_8449a633290fd0a45a7258f52c3a306e5597125e\classes.dex" />
+    </item>
+    <item
+        jar="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\instantRunSlicer\debug\jars\1\5\main_sliceb.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="954efa28a5182763cdc5493f39ffcc9210b24cee">
+        <dex dex="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\dex\debug\folders\1000\5\main_sliceb_e2808e0f5eb906c16360d93112b31bc063791533\classes.dex" />
+    </item>
+    <item
+        jar="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\instantRunSlicer\debug\jars\1\5\main_slice.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="43ebfbace455cb4a3ed2ce07a9cb872e734cac53">
+        <dex dex="D:\workspace\andriod\Viewholder_CommonAdapter-master\app\build\intermediates\transforms\dex\debug\folders\1000\5\main_slice_73bdde6c533ad9c8b04fc1712a1e068cf45fe9e2\classes.dex" />
+    </item>
+
+</items>

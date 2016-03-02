@@ -9,5 +9,5 @@
     <string name="humidity">今日气温:</string>
     <string name="pressure">今日天气:</string>
     <string name="weather">明日天气</string>
-    <string name="getweather">今天天气</string>
+    <string name="getweather">获取天气</string>
 </resources>

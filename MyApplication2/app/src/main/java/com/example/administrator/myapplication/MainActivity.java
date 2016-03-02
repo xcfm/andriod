@@ -1,5 +1,6 @@
 package com.example.administrator.myapplication;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -197,14 +198,15 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("fmz", "onNext: 城市:" + weather.getResult().getFuture().get(0).getTemperature() + " 温度:" + todayEntiry.getTemperature());
 
                         //Toast.makeText(MainActivity.this, "明天:" + weather.getResult().getFuture().get(0).getWeek() + " 温度:" + weather.getResult().getFuture().get(0).getTemperature(), Toast.LENGTH_SHORT).show();
-                        Futures = new ArrayList<Bean>();
+                        Futures = new ArrayList<>();
                         for (int i = 0; i < 6; i++) {
                             Bean bean = new Bean(weather, i);
-
                             Futures.add(bean);
                         }
-                        madaper = new MyAdapter(getBaseContext(), Futures);
-                        listView.setAdapter(madaper);
+                        MyAdapter2 adapter2 =new MyAdapter2(MainActivity.this,Futures,R.layout.item);
+                        listView.setAdapter(adapter2);
+                        /*madaper = new MyAdapter(MainActivity.this, Futures);
+                        listView.setAdapter(madaper);*/
                         country.setText(todayEntiry.getCity());
                         temperature.setText(weather.getResult().getSk().getTemp());
                         humidity.setText(todayEntiry.getTemperature());
