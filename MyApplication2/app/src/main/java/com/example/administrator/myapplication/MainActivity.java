@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.retrofit.APIService;
+import com.example.administrator.myapplication.untils.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private List<Bean> Futures;
     private EditText location, country, temperature, humidity, pressure;
-    private MyAdapter madaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,68 +43,7 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
     }
 
-    /* class MyAsycTask extends AsyncTask<String, Void, String> {
-         @Override
-         protected void onPreExecute() {
-             super.onPreExecute();
-             System.out.print("异步线程开始");
-         }
 
-         @Override
-         protected void onPostExecute(String s) {
-             super.onPostExecute(s);
-             WeatherBean weatherBean = JSONUtil.getWeatherBean(s);
-             country.setText(weatherBean.getCountry());
-             humidity.setText(weatherBean.getHumidity() + "");
-             pressure.setText(weatherBean.getPressure() + "");
-             temperature.setText((weatherBean.getTemperature() - 273) + "");
-             System.out.println("test2");
-         }
-
-
-         @Override
-         protected String doInBackground(String... params) {
-             InputStream is = null;
-             BufferedReader in = null;
-             String jsonText = "";
-             URL url = null;
-             try {
-                 url = new URL(params[0]);
-             } catch (MalformedURLException e) {
-                 e.printStackTrace();
-             }
-
-             try {
-                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                 conn.setReadTimeout(10000 *//* milliseconds *//*);
-                conn.setConnectTimeout(15000 *//* milliseconds *//*);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                conn.connect();
-
-                is = conn.getInputStream();
-                in = new BufferedReader(new InputStreamReader(is));
-                String line = "";
-                while ((line = in.readLine()) != null) {
-                    jsonText += line;
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    in.close();
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            return jsonText;
-        }
-    }
-*/
     public void open(View view) {
         getByRxJava();
        /* try {
@@ -121,30 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void maladroit(View view) {
         get();
-      /*  Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(new OkHttpClient())
-                .build();
-        GitHub gitHubService = retrofit.create(GitHub.class);
-        Call<List<Contributor>> call = gitHubService.contributors("square", "retrofit");
-       // Call<List<Contributor>> call1 = call.clone();
-// 5. 请求网络，异步
-        call.enqueue(new Callback<List<Contributor>>() {
-            @Override
-            public void onResponse(Response<List<Contributor>> response, Retrofit retrofit) {
-                String a= response.body().get(0).login;
-                int b=response.body().get(0).contributions;
-                temperature.setText(a);
-                humidity.setText(b+"");
-            }*/
 
-       /* try{
-            Response<List<Contributor>> response = call.execute(); // 同步
-            Log.d("mytag", "response:" + response.body().toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     private void get() {
@@ -203,10 +119,16 @@ public class MainActivity extends AppCompatActivity {
                             Bean bean = new Bean(weather, i);
                             Futures.add(bean);
                         }
-                        MyAdapter2 adapter2 =new MyAdapter2(MainActivity.this,Futures,R.layout.item);
+                        //MyAdapter2 adapter2 =new MyAdapter2(MainActivity.this,Futures,R.layout.item);
+                        CommonAdapter adapter2 = new CommonAdapter<Bean>(MainActivity.this,Futures,R.layout.item) {
+                            @Override
+                            public void convert(ViewHolder viewHolder, Bean item) {
+                                viewHolder.setText(R.id.textView_1,item.getWeek())
+                                        .setText(R.id.textView_2,item.getWeather())
+                                        .setText(R.id.textView_3,item.getTemperature());
+                            }
+                        };
                         listView.setAdapter(adapter2);
-                        /*madaper = new MyAdapter(MainActivity.this, Futures);
-                        listView.setAdapter(madaper);*/
                         country.setText(todayEntiry.getCity());
                         temperature.setText(weather.getResult().getSk().getTemp());
                         humidity.setText(todayEntiry.getTemperature());
@@ -214,27 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-        /*service.loadweather(city, apiKey).enqueue(new Callback<Weather>() {
-            @Override
-            public void onResponse(Response<Weather> response, Retrofit retrofit) {
-                if (response.body() != null) {
-                    Weather weather = response.body();
-                    Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
-                    country.setText(todayEntiry.getCity());
-                    temperature.setText(weather.getResult().getSk().getTemp());
-                    humidity.setText(todayEntiry.getTemperature());
-                    pressure.setText(todayEntiry.getWeather());
-                    Log.i("fmz", "onResponse: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
-                } else {
-                    Log.e("fmz", "onResponse: body==null");
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("fmz", "onFailure: ", t);
-            }
-        });*/
     }
 
     private void getByRxJava() {
