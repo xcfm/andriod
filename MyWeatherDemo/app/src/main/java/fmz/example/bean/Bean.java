@@ -5,10 +5,17 @@ package fmz.example.bean;
  */
 public class Bean{
     public Bean(Weather weather,int postion) {
-        this.temperature = weather.getResult().getFuture().get(postion).getTemperature();
-        this.weather = weather.getResult().getFuture().get(postion).getWeather();
-        this.date = weather.getResult().getFuture().get(postion).getDate();
-        this.week = weather.getResult().getFuture().get(postion).getWeek();
+        if(postion==0){
+            this.temperature = weather.getResult().getSk().getTemp();//今天当前温度
+            this.weather = weather.getResult().getToday().getWeather();
+            this.date = weather.getResult().getToday().getTemperature();//温度范围
+            this.week = weather.getResult().getToday().getWeek();
+        }
+        else {
+        this.temperature = weather.getResult().getFuture().get(postion-1).getTemperature();
+        this.weather = weather.getResult().getFuture().get(postion-1).getWeather();
+        this.date = weather.getResult().getFuture().get(postion-1).getDate();
+        this.week = weather.getResult().getFuture().get(postion-1).getWeek();}
     }
 
     private String temperature;
