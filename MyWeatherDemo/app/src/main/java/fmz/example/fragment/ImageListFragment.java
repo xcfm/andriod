@@ -7,6 +7,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fmz.example.bean.Bean;
 import fmz.example.bean.Weather;
@@ -22,10 +23,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by zzk on 15/12/7.
- */
-public class ImageListFragment extends FragmentPresenter<ImageListView> implements XRecyclerView.LoadingListener{
+
+public class ImageListFragment extends FragmentPresenter<ImageListView> implements XRecyclerView.LoadingListener {
 
     boolean isRefresh = true;
     String keyword;
@@ -48,7 +47,8 @@ public class ImageListFragment extends FragmentPresenter<ImageListView> implemen
 
     private void getData() {
         keyword = getArguments().getString("keyword");
-        String apiKey = "da8122ba9f394b3d9ed02e3e49da74ea";
+        //String apiKey = "da8122ba9f394b3d9ed02e3e49da74ea";
+        String apiKey = "c26d0b090a494726ab3957852cffa60b";
         String baseUrl = "http://apis.haoservice.com/";
         /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://image.baidu.com")
@@ -77,21 +77,24 @@ public class ImageListFragment extends FragmentPresenter<ImageListView> implemen
                         Log.i("fmz", "onCompleted: ");
 
                     }
+
                     @Override
                     public void onError(Throwable e) {
 
                     }
+
                     @Override
                     public void onNext(Weather weather) {
                         Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
                         Log.i("fmz", "onNext: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
                         ArrayList<Bean> Futures = new ArrayList<>();
-                        for (int i = 0; i < 6; i++) {
+                        ArrayList<Weather.ResultEntity.FutureEntity> abc= (ArrayList<Weather.ResultEntity.FutureEntity>) weather.getResult().getFuture();
+                        int a=abc.size();
+                        for (int i = 0; i <= a; i++) {
                             Bean bean = new Bean(weather, i);
                             Futures.add(bean);
                         }
-                        if(isRefresh)
-                        {
+                        if (isRefresh) {
                             mView.refreshListData(Futures);
                         }
                         //mView.addListData(Futures);
