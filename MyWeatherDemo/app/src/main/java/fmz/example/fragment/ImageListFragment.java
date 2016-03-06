@@ -47,8 +47,8 @@ public class ImageListFragment extends FragmentPresenter<ImageListView> implemen
 
     private void getData() {
         keyword = getArguments().getString("keyword");
-        //String apiKey = "da8122ba9f394b3d9ed02e3e49da74ea";
-        String apiKey = "c26d0b090a494726ab3957852cffa60b";
+        String apiKey = "da8122ba9f394b3d9ed02e3e49da74ea";
+        //String apiKey = "c26d0b090a494726ab3957852cffa60b";
         String baseUrl = "http://apis.haoservice.com/";
         /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://image.baidu.com")

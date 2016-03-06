@@ -1,6 +1,7 @@
 package fmz.example.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import fmz.example.R;
 import fmz.example.fragment.ContentFragment;
 import fmz.example.fragment.ImageFragment;
 import fmz.example.helper.EventHelper;
+import fmz.example.ui.SettingActivity;
 
 /**
  * Created by zzk on 15/11/26.
@@ -76,6 +78,9 @@ public class MainView extends ViewImpl {
         switch (itemId) {
             case R.id.action_settings:
                 Snackbar.make(mRootView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Intent intent =new Intent();
+                intent.setClass(mRootView.getContext(), SettingActivity.class);
+                mRootView.getContext().startActivity(intent);
                 isConsume = true;
                 break;
         }
