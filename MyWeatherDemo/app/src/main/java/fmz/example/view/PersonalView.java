@@ -33,7 +33,7 @@ public class PersonalView extends ViewImpl {
     @Override
     public void bindEvent() {
         super.bindEvent();
-        collapsingToolbar.setTitle("Lico");
+        collapsingToolbar.setTitle("Fmz");
         collapsingToolbar.setExpandedTitleColor(Color.WHITE);
         collapsingToolbar.setCollapsedTitleTextColor(Color.GREEN);
 

@@ -1,0 +1,749 @@
+Index: app/src/main/java/fmz/example/bean/WeatherDB.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/bean/WeatherDB.java	(revision )
++++ app/src/main/java/fmz/example/bean/WeatherDB.java	(revision )
+@@ -0,0 +1,57 @@
++package fmz.example.bean;
++
++import android.content.Context;
++import android.database.Cursor;
++import android.database.sqlite.SQLiteDatabase;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * Created by hugo on 2015/9/30 0030.
++ * 封装数据库操作
++ */
++public class WeatherDB {
++
++    private Context context;
++    public WeatherDB(Context context) {
++        this.context = context;
++    }
++
++
++    public List<Province> loadProvinces(SQLiteDatabase db) {
++
++        List<Province> list = new ArrayList<>();
++
++        Cursor cursor = db.query("T_Province", null, null, null, null, null, null);
++
++        if (cursor.moveToFirst()) {
++
++            do {
++                Province province = new Province();
++                province.setProSort(cursor.getInt(cursor.getColumnIndex("ProSort")));
++                province.setProName(cursor.getString(cursor.getColumnIndex("ProName")));
++                list.add(province);
++            } while (cursor.moveToNext());
++        }
++        cursor.close();
++        return list;
++    }
++
++
++    public List<City> loadCities(SQLiteDatabase db, int ProID) {
++        List<City> list = new ArrayList<>();
++        Cursor cursor = db.query("T_City", null, "ProID = ?", new String[] { String.valueOf(ProID) }, null, null, null);
++        if (cursor.moveToFirst()) {
++            do {
++                City city = new City();
++                city.setCityName(cursor.getString(cursor.getColumnIndex("CityName")));
++                city.setProID(ProID);
++                list.add(city);
++            } while (cursor.moveToNext());
++        }
++        cursor.close();
++
++        return list;
++    }
++}
+Index: app/src/main/java/fmz/example/view/MainView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/view/MainView.java	(revision 80c7bd9000268457e420e25c10ba4bad205be89a)
++++ app/src/main/java/fmz/example/view/MainView.java	(revision )
+@@ -1,6 +1,7 @@
+ package fmz.example.view;
+ 
+ import android.app.Activity;
++import android.content.Intent;
+ import android.graphics.Bitmap;
+ import android.support.design.widget.FloatingActionButton;
+ import android.support.design.widget.NavigationView;
+@@ -20,6 +21,8 @@
+ import fmz.example.fragment.ContentFragment;
+ import fmz.example.fragment.ImageFragment;
+ import fmz.example.helper.EventHelper;
++import fmz.example.ui.ChoiceCityActivity;
++import fmz.example.ui.MainActivity;
+ 
+ /**
+  * Created by zzk on 15/11/26.
+@@ -76,6 +79,10 @@
+         switch (itemId) {
+             case R.id.action_settings:
+                 Snackbar.make(mRootView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
++                Intent intent =new Intent();
++                intent.setClass(mRootView.getContext(), ChoiceCityActivity.class);
++                mRootView.getContext().startActivity(intent);
++
+                 isConsume = true;
+                 break;
+         }
+Index: app/src/main/java/fmz/example/bean/Province.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/bean/Province.java	(revision )
++++ app/src/main/java/fmz/example/bean/Province.java	(revision )
+@@ -0,0 +1,27 @@
++package fmz.example.bean;
++
++/**
++ * Created by hugo on 2015/9/30 0030.
++ */
++public class Province {
++
++    private String ProName;
++    private int ProSort;
++
++
++    public String getProName() {
++        return ProName;
++    }
++
++    public int getProSort() {
++        return ProSort;
++    }
++
++    public void setProName(String proName) {
++        ProName = proName;
++    }
++
++    public void setProSort(int proSort) {
++        ProSort = proSort;
++    }
++}
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 80c7bd9000268457e420e25c10ba4bad205be89a)
++++ app/src/main/AndroidManifest.xml	(revision )
+@@ -1,9 +1,11 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     package="fmz.example">
+-
++    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
++    <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+     <uses-permission android:name="android.permission.INTERNET" />
+-
+     <application
+         android:allowBackup="true"
+         android:icon="@mipmap/ic_launcher"
+@@ -27,6 +29,9 @@
+             android:screenOrientation="portrait"></activity>
+ 
+         <activity android:name="fmz.example.ui.SpaceImageDetailActivity"
++            android:screenOrientation="portrait"
++            android:theme="@style/IMThemeTransparent"></activity>
++        <activity android:name="fmz.example.ui.ChoiceCityActivity"
+             android:screenOrientation="portrait"
+             android:theme="@style/IMThemeTransparent"></activity>
+ 
+Index: app/src/main/java/fmz/example/bean/City.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/bean/City.java	(revision )
++++ app/src/main/java/fmz/example/bean/City.java	(revision )
+@@ -0,0 +1,27 @@
++package fmz.example.bean;
++
++/**
++ * Created by hugo on 2015/9/30 0030.
++ */
++public class City {
++
++    private String CityName;
++    private int ProID;
++
++
++    public String getCityName() {
++        return CityName;
++    }
++
++    public int getProID() {
++        return ProID;
++    }
++
++    public void setCityName(String cityName) {
++        CityName = cityName;
++    }
++
++    public void setProID(int proID) {
++        ProID = proID;
++    }
++}
+Index: app/src/main/res/layout/item_city.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/item_city.xml	(revision )
++++ app/src/main/res/layout/item_city.xml	(revision )
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="utf-8"?>
++<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:card_view="http://schemas.android.com/apk/res-auto"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:layout_margin="8dp"
++    android:id="@+id/cardView"
++    android:clickable="true"
++    android:foreground="?android:attr/selectableItemBackground"
++    card_view:cardCornerRadius="2dp"
++    card_view:cardElevation="1dp">
++
++    <LinearLayout
++        android:gravity="center_vertical"
++        android:padding="16dp"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:orientation="horizontal">
++
++        <ImageView
++            android:src="@mipmap/icon_city_temp"
++            android:layout_width="24dp"
++            android:layout_height="24dp"/>
++
++        <TextView
++            android:id="@+id/item_city"
++            android:layout_marginLeft="16dp"
++            android:text="成都"
++            android:textSize="16sp"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"/>
++    </LinearLayout>
++</android.support.v7.widget.CardView>
+\ No newline at end of file
+Index: app/src/main/java/fmz/example/utils/DBManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/utils/DBManager.java	(revision )
++++ app/src/main/java/fmz/example/utils/DBManager.java	(revision )
+@@ -0,0 +1,96 @@
++package fmz.example.utils;
++
++import android.content.Context;
++import android.database.sqlite.SQLiteDatabase;
++import android.os.Environment;
++import android.util.Log;
++
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++import android.content.Context;
++import android.database.sqlite.SQLiteDatabase;
++import android.os.Environment;
++import android.util.Log;
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++
++import fmz.example.R;
++
++/**
++ * Created by hugo on 2015/9/30 0030.
++ * 数据库管理类
++ */
++public class DBManager {
++    private static String TAG = DBManager.class.getSimpleName();
++    private final int BUFFER_SIZE = 400000;
++    public static final String DB_NAME = "china_city.db"; //数据库名字
++    public static final String PACKAGE_NAME = "com.xiecc.seeWeather";
++    public static final String DB_PATH = "/data" + Environment.getDataDirectory().getAbsolutePath() + "/" +
++            PACKAGE_NAME;  //在手机里存放数据库的位置(/data/data/com.xiecc.seeWeather/china_city.db)
++    private SQLiteDatabase database;
++    private Context context;
++
++
++    public DBManager(Context context) {
++        this.context = context;
++    }
++
++
++    public SQLiteDatabase getDatabase() {
++        return database;
++    }
++
++
++    public void setDatabase(SQLiteDatabase database) {
++        this.database = database;
++    }
++
++
++    public void openDatabase() {
++        Log.e(TAG, DB_PATH + "/" + DB_NAME);
++        this.database = this.openDatabase(DB_PATH + "/" + DB_NAME);
++    }
++
++
++    private SQLiteDatabase openDatabase(String dbfile) {
++
++        try {
++            if (!(new File(dbfile).exists())) {
++                //判断数据库文件是否存在，若不存在则执行导入，否则直接打开数据库
++                InputStream is = this.context.getResources().openRawResource(R.raw.china_city); //欲导入的数据库
++                FileOutputStream fos = new FileOutputStream(dbfile);
++                byte[] buffer = new byte[BUFFER_SIZE];
++                int count = 0;
++                while ((count = is.read(buffer)) > 0) {
++                    fos.write(buffer, 0, count);
++                }
++                fos.close();
++                is.close();
++            }
++
++            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbfile, null);
++
++            return db;
++        } catch (FileNotFoundException e) {
++            Log.e("Database", "File not found");
++            e.printStackTrace();
++        } catch (IOException e) {
++            Log.e("Database", "IO exception");
++            e.printStackTrace();
++        }
++        return null;
++    }
++
++
++    public void closeDatabase() {
++        this.database.close();
++    }
++}
++
++
+Index: app/src/main/java/fmz/example/adapter/CityAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/adapter/CityAdapter.java	(revision )
++++ app/src/main/java/fmz/example/adapter/CityAdapter.java	(revision )
+@@ -0,0 +1,71 @@
++package fmz.example.adapter;
++
++import android.content.Context;
++import android.support.v7.widget.CardView;
++import android.support.v7.widget.RecyclerView;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.TextView;
++
++
++import java.util.ArrayList;
++
++import fmz.example.R;
++
++/**
++ * Created by hugo on 2016/2/19 0019.
++ */
++public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
++    private Context mContext;
++    private ArrayList<String> dataList;
++    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
++
++
++    public CityAdapter(Context context, ArrayList<String> dataList) {
++        mContext = context;
++        this.dataList = dataList;
++    }
++
++
++    @Override public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
++        return new CityViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_city, parent, false));
++    }
++
++
++    @Override public void onBindViewHolder(final CityViewHolder holder, final int position) {
++        holder.itemCity.setText(dataList.get(position));
++        holder.cardView.setOnClickListener(new View.OnClickListener() {
++            @Override public void onClick(View v) {
++                mOnItemClickListener.onItemClick(v, position);
++            }
++        });
++    }
++
++
++    @Override public int getItemCount() {
++        return dataList.size();
++    }
++
++
++    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
++        this.mOnItemClickListener = listener;
++    }
++
++
++    public interface OnRecyclerViewItemClickListener {
++        void onItemClick(View view, int pos);
++    }
++
++    class CityViewHolder extends RecyclerView.ViewHolder {
++        private TextView itemCity;
++        private CardView cardView;
++
++
++        public CityViewHolder(View itemView) {
++            super(itemView);
++            itemCity = (TextView) itemView.findViewById(R.id.item_city);
++            cardView = (CardView) itemView.findViewById(R.id.cardView);
++        }
++    }
++}
+Index: app/src/main/java/fmz/example/view/ImageListView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/view/ImageListView.java	(revision 80c7bd9000268457e420e25c10ba4bad205be89a)
++++ app/src/main/java/fmz/example/view/ImageListView.java	(revision )
+@@ -1,11 +1,12 @@
+ package fmz.example.view;
+ 
+ import android.app.Activity;
+-import android.content.ContentProvider;
+ import android.content.Context;
+ import android.content.Intent;
+-import android.content.SharedPreferences;
++
++import android.support.v7.widget.GridLayoutManager;
+ import android.support.v7.widget.StaggeredGridLayoutManager;
++import android.util.Log;
+ import android.view.View;
+ 
+ import com.jcodecraeer.xrecyclerview.ProgressStyle;
+@@ -41,26 +42,25 @@
+         return R.layout.fragment_image_list;
+     }
+ 
+-    public void initViews(Context context, XRecyclerView.LoadingListener listener){
++    public void initViews(Context context, XRecyclerView.LoadingListener listener) {
+-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+-        xrecyclerView.setLayoutManager(layoutManager);
+-        xrecyclerView.setLoadingListener(listener);
++         CustomGridLayoutManager manager =new CustomGridLayoutManager(context,4);
++        xrecyclerView.setLayoutManager(manager);
++       /* xrecyclerView.setLoadingListener(listener);
+         xrecyclerView.setRefreshProgressStyle(ProgressStyle.BallRotate);
+         xrecyclerView.setLaodingMoreProgressStyle(ProgressStyle.BallRotate);
+-        xrecyclerView.addItemDecoration(new SpacesItemDecoration(5));
++        xrecyclerView.addItemDecoration(new SpacesItemDecoration(5));*/
+         //xrecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+         mAdapter = new SimpleRecyclerAdapter<Bean>(context, mList, R.layout.item) {
+-
+             @Override
+             protected void convert(BaseAdapterHelper helper, Bean item) {
+-                helper.setText(R.id.textView_1,""+item.getWeek());
++                helper.setText(R.id.textView_1, "" + item.getWeek());
+-                helper.setText(R.id.textView_2,item.getTemperature()+"℃");
++                helper.setText(R.id.textView_2, item.getTemperature() + "℃");
+-                helper.setText(R.id.textView_3,item.getWeather());
++                helper.setText(R.id.textView_3, item.getWeather());
+-                helper.setImageByResource(R.id.imageView_2,getWeather(item.getWeather()));
++                helper.setImageByResource(R.id.imageView_2, getWeather(item.getWeather()));
+             }
+         };
+ 
+-        mAdapter.setOnInViewClickListener(R.id.root_layout, new BaseQuickAdapter.onInternalClickListenerImpl<ImagesListEntity>(){
++        /*mAdapter.setOnInViewClickListener(R.id.root_layout, new BaseQuickAdapter.onInternalClickListenerImpl<ImagesListEntity>() {
+             @Override
+             public void OnClickListener(View parentV, View v, Integer position, ImagesListEntity values) {
+                 int[] location = new int[2];
+@@ -69,15 +69,15 @@
+                 int height = v.getHeight();
+                 gotoDetail((Activity) context, position, values, location[0], location[1], width, height);
+             }
+-        });
++        });*/
+ 
+         xrecyclerView.setAdapter(mAdapter);
+     }
+ 
+     private int getWeather(String weather) {
+-        Setting mSetting=Setting.getInstance();
++        Setting mSetting = Setting.getInstance();
+-        int a= mSetting.getInt(weather,0);
++        int a = mSetting.getInt(weather, 0);
+-        if(a==0){
++        if (a == 0) {
+             return R.mipmap.avator;
+         }
+         return a;
+@@ -91,7 +91,7 @@
+         xrecyclerView.scrollToPosition(0);
+     }
+ 
+-    public void addListData(List<Bean> imageEntity){
++    public void addListData(List<Bean> imageEntity) {
+         xrecyclerView.loadMoreComplete();
+         mAdapter.getDataList().addAll(imageEntity);
+         //用notifyDataSetChanged();会出现花屏问题
+@@ -99,7 +99,7 @@
+         xrecyclerView.refreshComplete();
+     }
+ 
+-    private void gotoDetail(Activity activity, int position, ImagesListEntity imagesListEntity, int x, int y, int width, int height){
++    private void gotoDetail(Activity activity, int position, ImagesListEntity imagesListEntity, int x, int y, int width, int height) {
+         Intent intent = new Intent(activity, SpaceImageDetailActivity.class);
+         intent.putExtra("images", imagesListEntity.imageUrl);
+         intent.putExtra("locationX", x);
+Index: app/src/main/res/layout/activity_choice_city.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_choice_city.xml	(revision )
++++ app/src/main/res/layout/activity_choice_city.xml	(revision )
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++<android.support.v7.widget.RecyclerView
++    android:layout_width="match_parent"
++    android:id="@+id/recycleview_city"
++    android:layout_height="match_parent">
++
++</android.support.v7.widget.RecyclerView>
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/fmz/example/view/CustomGridLayoutManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/view/CustomGridLayoutManager.java	(revision )
++++ app/src/main/java/fmz/example/view/CustomGridLayoutManager.java	(revision )
+@@ -0,0 +1,19 @@
++package fmz.example.view;
++
++import android.content.Context;
++import android.support.v7.widget.GridLayoutManager;
++
++/**
++ * Created by Administrator on 2016/3/6.
++ */
++public class CustomGridLayoutManager extends GridLayoutManager {
++    public CustomGridLayoutManager(Context context, int spanCount) {
++        super(context, 2);
++        setSpanSizeLookup(new SpanSizeLookup() {
++            @Override
++            public int getSpanSize(int position) {
++                return position == 0 ? 2 : 1;
++            }
++        });
++    }
++}
+Index: app/src/main/java/fmz/example/ui/ChoiceCityActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/ui/ChoiceCityActivity.java	(revision )
++++ app/src/main/java/fmz/example/ui/ChoiceCityActivity.java	(revision )
+@@ -0,0 +1,155 @@
++package fmz.example.ui;
++
++import android.app.Activity;
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.design.widget.CollapsingToolbarLayout;
++import android.support.v7.widget.LinearLayoutManager;
++import android.support.v7.widget.RecyclerView;
++import android.support.v7.widget.Toolbar;
++import android.view.KeyEvent;
++import android.view.View;
++import android.widget.ImageView;
++
++import com.bumptech.glide.Glide;
++import com.bumptech.glide.load.engine.DiskCacheStrategy;
++import java.util.ArrayList;
++import java.util.List;
++
++import fmz.example.R;
++import fmz.example.adapter.CityAdapter;
++import fmz.example.base.BaseActivity;
++import fmz.example.bean.City;
++import fmz.example.bean.Province;
++import fmz.example.bean.WeatherDB;
++import fmz.example.utils.DBManager;
++
++/**
++ * Created by hugo on 2016/2/19 0019.
++ */
++public class ChoiceCityActivity extends Activity {
++    private static String TAG = ChoiceCityActivity.class.getSimpleName();
++    private RecyclerView mRecyclerView;
++    private DBManager mDBManager;
++    private WeatherDB mWeatherDB;
++
++    private ArrayList<String> dataList = new ArrayList<>();
++    private Province selectedProvince;
++    private City selectedCity;
++    private List<Province> provincesList;
++    private List<City> cityList;
++    private CityAdapter mAdapter;
++
++    public static final int LEVEL_PROVINCE = 1;
++    public static final int LEVEL_CITY = 2;
++    private int currentLevel = 0;
++
++
++    @Override protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_choice_city);
++        mDBManager = new DBManager(this);
++        mDBManager.openDatabase();
++        mWeatherDB = new WeatherDB(this);
++
++        initView();
++
++        initRecyclerView();
++        queryProvinces();
++
++        if (mAdapter.getItemCount() != 0) {
++            mRecyclerView.setVisibility(View.VISIBLE);
++        }
++    }
++
++
++    private void initView() {
++        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
++        toolbar.setTitle("选择城市");
++        /*if (mSetting.getInt(Setting.HOUR, 0) < 6 || mSetting.getInt(Setting.HOUR, 0) > 18) {
++            collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.colorSunset));
++            Glide.with(this).load(R.mipmap.city_night).diskCacheStrategy(DiskCacheStrategy.ALL).into(bannner);
++        }*/
++    }
++
++
++    private void initRecyclerView() {
++        mRecyclerView = (RecyclerView) findViewById(R.id.recycleview_city);
++        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
++        mRecyclerView.setHasFixedSize(true);
++        mAdapter = new CityAdapter(this, dataList);
++        mRecyclerView.setAdapter(mAdapter);
++        mAdapter.setOnItemClickListener(new CityAdapter.OnRecyclerViewItemClickListener() {
++            @Override public void onItemClick(View view, int pos) {
++                if (currentLevel == LEVEL_PROVINCE) {
++                    selectedProvince = provincesList.get(pos);
++                    mRecyclerView.scrollTo(0, 0);
++                    queryCities();
++                }
++                else if (currentLevel == LEVEL_CITY) {
++                    selectedCity = cityList.get(pos);
++                    Intent intent = new Intent();
++                    String cityName = selectedCity.getCityName();
++                    intent.putExtra("城市", cityName);
++                    setResult(2, intent);
++                    finish();
++                }
++            }
++        });
++    }
++
++
++    /**
++     * 查询全国所有的省，从数据库查询
++     */
++    private void queryProvinces() {
++        provincesList = mWeatherDB.loadProvinces(mDBManager.getDatabase());
++        if (provincesList.size() > 0) {
++            dataList.clear();
++            for (Province province : provincesList) {
++                dataList.add(province.getProName());
++            }
++            mAdapter.notifyDataSetChanged();
++            currentLevel = LEVEL_PROVINCE;
++        }
++    }
++
++
++    /**
++     * 查询选中省份的所有城市，从数据库查询
++     */
++    private void queryCities() {
++        cityList = mWeatherDB.loadCities(mDBManager.getDatabase(), selectedProvince.getProSort());
++        if (cityList.size() > 0) {
++            dataList.clear();
++            for (City city : cityList) {
++                dataList.add(city.getCityName());
++            }
++            mAdapter.notifyDataSetChanged();
++            //定位到第一个item
++            //listView.setSelection(0);
++            mRecyclerView.smoothScrollToPosition(0);
++            currentLevel = LEVEL_CITY;
++        }
++    }
++
++
++    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
++        if (keyCode == KeyEvent.KEYCODE_BACK) {
++            if (currentLevel == LEVEL_PROVINCE) {
++                finish();
++            }
++            else {
++                queryProvinces();
++                mRecyclerView.smoothScrollToPosition(0);
++            }
++        }
++        return false;
++    }
++
++
++    @Override protected void onDestroy() {
++        super.onDestroy();
++        mDBManager.closeDatabase();
++    }
++}
+Index: app/src/main/java/fmz/example/view/PersonalView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/fmz/example/view/PersonalView.java	(revision 80c7bd9000268457e420e25c10ba4bad205be89a)
++++ app/src/main/java/fmz/example/view/PersonalView.java	(revision )
+@@ -33,7 +33,7 @@
+     @Override
+     public void bindEvent() {
+         super.bindEvent();
+-        collapsingToolbar.setTitle("Lico");
++        collapsingToolbar.setTitle("fmz");
+         collapsingToolbar.setExpandedTitleColor(Color.WHITE);
+         collapsingToolbar.setCollapsedTitleTextColor(Color.GREEN);
+ 
