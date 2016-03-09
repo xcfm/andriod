@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.Scroller;
+import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -32,7 +34,8 @@ import fmz.example.views.SpacesItemDecoration;
 public class ImageListView extends ViewImpl {
     @Bind(R.id.xrecyclerView)
     XRecyclerView xrecyclerView;
-
+@Bind(R.id.abcdefg)
+    TextView textView;
     private SimpleRecyclerAdapter mAdapter;
     private List<Bean> mList = new ArrayList<>();
 
@@ -49,6 +52,7 @@ public class ImageListView extends ViewImpl {
         xrecyclerView.setLaodingMoreProgressStyle(ProgressStyle.BallRotate);
         xrecyclerView.addItemDecoration(new SpacesItemDecoration(5));
         //xrecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        textView.setScroller(new Scroller(context));
         mAdapter = new SimpleRecyclerAdapter<Bean>(context, mList, R.layout.item) {
 
             @Override

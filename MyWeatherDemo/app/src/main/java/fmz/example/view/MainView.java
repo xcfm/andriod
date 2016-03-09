@@ -36,7 +36,6 @@ public class MainView extends ViewImpl {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
-
     private ImageView mHeadBgImg, mAvatorImg;
     private ImageFragment mImageFragment;
     private ContentFragment mContentFragment;
@@ -83,6 +82,12 @@ public class MainView extends ViewImpl {
                 mRootView.getContext().startActivity(intent);
                 isConsume = true;
                 break;
+            case R.id.action_settings2:
+                Snackbar.make(mRootView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                break;
+            default:
+                break;
+
         }
         return isConsume;
     }
