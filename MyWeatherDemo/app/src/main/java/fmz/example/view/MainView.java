@@ -52,7 +52,6 @@ public class MainView extends ViewImpl {
                 (Activity) mRootView.getContext(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
-
         View headerView = navView.inflateHeaderView(R.layout.nav_header_main);
         mHeadBgImg = (ImageView) headerView.findViewById(R.id.head_image);
         mAvatorImg = (ImageView) headerView.findViewById(R.id.imageView);

@@ -34,8 +34,6 @@ import fmz.example.views.SpacesItemDecoration;
 public class ImageListView extends ViewImpl {
     @Bind(R.id.xrecyclerView)
     XRecyclerView xrecyclerView;
-@Bind(R.id.abcdefg)
-    TextView textView;
     private SimpleRecyclerAdapter mAdapter;
     private List<Bean> mList = new ArrayList<>();
 
@@ -52,7 +50,6 @@ public class ImageListView extends ViewImpl {
         xrecyclerView.setLaodingMoreProgressStyle(ProgressStyle.BallRotate);
         xrecyclerView.addItemDecoration(new SpacesItemDecoration(5));
         //xrecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
-        textView.setScroller(new Scroller(context));
         mAdapter = new SimpleRecyclerAdapter<Bean>(context, mList, R.layout.item) {
 
             @Override
