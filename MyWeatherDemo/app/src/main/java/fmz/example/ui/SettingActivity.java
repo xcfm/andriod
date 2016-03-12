@@ -41,6 +41,7 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
     EditText editText3;
     @Bind(R.id.Setting_edittext4)
     EditText editText4;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -59,43 +60,44 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
         switch (v.getId()) {
             case R.id.Setting_button1:
                 editText1 = (EditText) findViewById(R.id.Setting_edittext1);
-                String city= editText1.getText().toString().trim();
+                String city = editText1.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市1", editText1.getText().toString().trim());
-                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
+                //Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button2:
                 editText2 = (EditText) findViewById(R.id.Setting_edittext1);
-                 city= editText2.getText().toString().trim();
+                city = editText2.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市2", editText2.getText().toString().trim());
-                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Setting_button3:
                 editText3 = (EditText) findViewById(R.id.Setting_edittext1);
-                city= editText3.getText().toString().trim();
+                city = editText3.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市3", editText3.getText().toString().trim());
-                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Setting_button4:
                 editText4 = (EditText) findViewById(R.id.Setting_edittext1);
-                city= editText4.getText().toString().trim();
+                city = editText4.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市4", editText4.getText().toString().trim());
-                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Setting_button_del:
                 mSetting.clearcity();
-                Snackbar.make(mView.getRootView(), "清除成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "清除成功", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
