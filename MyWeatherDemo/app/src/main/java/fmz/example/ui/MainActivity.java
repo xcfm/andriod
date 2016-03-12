@@ -90,6 +90,7 @@ public class MainActivity extends ActivityPresenter<MainView>
                         mView.setAvator(bitmap);
                     }
                 });
+        this.setStatusBarColor(R.color.light_grey);
         mSetting.putInt("晴", R.mipmap.type_one_sunny);
         mSetting.putInt("阴", R.mipmap.type_one_cloudy);
         mSetting.putInt("多云", R.mipmap.type_one_cloudy);

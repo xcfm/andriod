@@ -34,6 +34,7 @@
         <activity
             android:name=".ui.SettingActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
             ></activity>
     </application>
 

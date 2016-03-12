@@ -2,42 +2,97 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/Setting_edittext"
-            android:hint="请输入城市名"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp" />
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/Setting_edittext1"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:hint="请输入城市名" />
+
+            <Button
+                android:id="@+id/Setting_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="更改城市1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/Setting_edittext2"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:hint="请输入城市名" />
+
+            <Button
+                android:id="@+id/Setting_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="更改城市2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/Setting_edittext3"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:hint="请输入城市名" />
+
+            <Button
+                android:id="@+id/Setting_button3"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="更改城市3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/Setting_edittext4"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:hint="请输入城市名" />
+
+            <Button
+                android:id="@+id/Setting_button4"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="更改城市4" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/Setting_button1"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="添加城市" />
-        <Button
-            android:id="@+id/Setting_button2"
+            android:id="@+id/Setting_button_del"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="删除城市" />
+            android:text="清空城市" />
     </LinearLayout>
-
-
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/Setting_citylist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

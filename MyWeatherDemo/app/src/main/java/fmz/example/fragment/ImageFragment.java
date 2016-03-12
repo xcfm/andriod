@@ -4,6 +4,7 @@ import android.content.Context;
 
 import fmz.example.R;
 import fmz.example.presenter.FragmentPresenter;
+import fmz.example.utils.Setting;
 import fmz.example.view.ImagesView;
 import rx.Observable;
 import rx.Subscriber;
@@ -13,7 +14,7 @@ import rx.functions.Func1;
 /**
  * Created by zzk on 15/11/28.
  */
-public class ImageFragment extends FragmentPresenter<ImagesView>{
+public class ImageFragment extends FragmentPresenter<ImagesView> {
 
 
     @Override
@@ -22,9 +23,30 @@ public class ImageFragment extends FragmentPresenter<ImagesView>{
         getTitles(getActivity());
     }
 
-    private void getTitles(Context context){
+    private void getTitles(Context context) {
+        Setting mSetting = Setting.getInstance();
+        String city1 = mSetting.getString("城市1", "合肥");
+        String city2 = mSetting.getString("城市2", "北京");
+        String city3 = mSetting.getString("城市3", "上海");
+        String city4 = mSetting.getString("城市4", "阜阳");
+        String[] citys = {city1, city2, city3, city4};
+        Observable.just(citys)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String[]>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-        Observable.just(R.array.images_category_list)
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(String[] strings) {
+                        mView.initViewPager(strings, getFragmentManager());
+                    }
+                });
+        /* Observable.just(R.array.images_category_list)
                 .map(new Func1<Integer, String[]>() {
 
                     @Override
@@ -48,6 +70,6 @@ public class ImageFragment extends FragmentPresenter<ImagesView>{
                     public void onNext(String[] strings) {
                         mView.initViewPager(strings, getFragmentManager());
                     }
-                });
+                });*/
     }
 }

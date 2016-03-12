@@ -16,48 +16,52 @@ import fmz.example.R;
 import fmz.example.adapter.BaseAdapterHelper;
 import fmz.example.adapter.SimpleRecyclerAdapter;
 import fmz.example.base.EApplication;
+import fmz.example.helper.EventHelper;
 import fmz.example.utils.Setting;
 
 /**
  * Created by Administrator on 2016/3/8.
  */
-public class SettingView extends ViewImpl {
+public class SettingView extends ViewImpl{
     @Bind(R.id.Setting_button1)
-    Button addcity;
+    Button addcity1;
     @Bind(R.id.Setting_button2)
-     Button delcity;
-    @Bind(R.id.Setting_citylist)
-     RecyclerView listView;
-    @Bind(R.id.Setting_edittext)
-    EditText editText;
+    Button addcity2;
+    @Bind(R.id.Setting_button3)
+    Button addcity3;
+    @Bind(R.id.Setting_button4)
+    Button addcity4;
+    @Bind(R.id.Setting_button_del)
+    Button delcity;
+
     private Setting setting;
+
     @Override
     public int getLayoutId() {
         return R.layout.settingactivity;
     }
+
     @Override
     public void bindEvent() {
         super.bindEvent();
-        Setting mSetting = Setting.getInstance();
+        EventHelper.click(mPresenter,addcity1, addcity2, addcity3, addcity4, delcity);
 //        String[] abc =getResources().getStringArray(R.array.images_category_list);
-          addcity.setOnClickListener(new View.OnClickListener() {
+          /*addcity.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
                   if(editText.equals(null)){
                       Toast.makeText(EApplication.mAppContext,"请输入城市名",Toast.LENGTH_SHORT);
                   }
-                  mSetting.putString("城市",editText.getText().toString().trim());
+                  mSetting.putString("城市1",editText.getText().toString().trim());
+                  Toast.makeText(EApplication.mAppContext,"更改成功",Toast.LENGTH_SHORT);
               }
-          });
-        delcity.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  mSetting.clearcity();
-              }
-          });
+          });*/
     }
+
     @Override
     public void destroy() {
 
     }
+
+
 }
