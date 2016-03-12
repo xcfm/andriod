@@ -67,35 +67,42 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button2:
-                if (editText2.get Text().toString().trim().equals(null)) {
-                    Toast.makeText(EApplication.mAppContext, "请输入城市名", Toast.LENGTH_SHORT);
+                editText2 = (EditText) findViewById(R.id.Setting_edittext1);
+                 city= editText2.getText().toString().trim();
+                if (city.equals("")) {
+                    Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市2", editText2.getText().toString().trim());
-                Toast.makeText(EApplication.mAppContext, "更改成功", Toast.LENGTH_SHORT);
+                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button3:
-                if (editText3.getText().toString().trim().equals(null)) {
-                    Toast.makeText(EApplication.mAppContext, "请输入城市名", Toast.LENGTH_SHORT);
+                editText3 = (EditText) findViewById(R.id.Setting_edittext1);
+                city= editText3.getText().toString().trim();
+                if (city.equals("")) {
+                    Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市3", editText3.getText().toString().trim());
-                Toast.makeText(EApplication.mAppContext, "更改成功", Toast.LENGTH_SHORT);
+                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button4:
-                if (editText4.getText().toString().trim().equals(null)) {
-                    Toast.makeText(EApplication.mAppContext, "请输入城市名", Toast.LENGTH_SHORT);
+                editText4 = (EditText) findViewById(R.id.Setting_edittext1);
+                city= editText4.getText().toString().trim();
+                if (city.equals("")) {
+                    Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
                 mSetting.putString("城市4", editText4.getText().toString().trim());
-                Toast.makeText(EApplication.mAppContext, "更改成功", Toast.LENGTH_SHORT);
+                Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button_del:
                 mSetting.clearcity();
-                Toast.makeText(EApplication.mAppContext, "清除成功", Toast.LENGTH_SHORT);
+                Snackbar.make(mView.getRootView(), "清除成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             default:
                 break;
 
         }
     }
+
 }
 
 /*
