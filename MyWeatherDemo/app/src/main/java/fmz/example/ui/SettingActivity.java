@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
@@ -24,6 +27,7 @@ import fmz.example.adapter.BaseAdapterHelper;
 import fmz.example.adapter.SimpleRecyclerAdapter;
 import fmz.example.base.BaseActivity;
 import fmz.example.base.EApplication;
+import fmz.example.fragment.ImageFragment;
 import fmz.example.presenter.ActivityPresenter;
 import fmz.example.utils.Setting;
 import fmz.example.view.PersonalView;
@@ -69,7 +73,7 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 //Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button2:
-                editText2 = (EditText) findViewById(R.id.Setting_edittext1);
+                editText2 = (EditText) findViewById(R.id.Setting_edittext2);
                 city = editText2.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -78,7 +82,7 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Setting_button3:
-                editText3 = (EditText) findViewById(R.id.Setting_edittext1);
+                editText3 = (EditText) findViewById(R.id.Setting_edittext3);
                 city = editText3.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -87,7 +91,7 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Setting_button4:
-                editText4 = (EditText) findViewById(R.id.Setting_edittext1);
+                editText4 = (EditText) findViewById(R.id.Setting_edittext4);
                 city = editText4.getText().toString().trim();
                 if (city.equals("")) {
                     Snackbar.make(mView.getRootView(), "点击了Setting", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -100,11 +104,24 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 Toast.makeText(getApplicationContext(), "清除成功", Toast.LENGTH_SHORT).show();
                 break;
             default:
+                resettabs();
                 break;
 
         }
     }
 
+    private void resettabs() {
+        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        ImageFragment mImageFragment = (ImageFragment) manager.findFragmentByTag("images");
+        if (mImageFragment == null) {
+            mImageFragment = new ImageFragment();
+            transaction.add(R.id.container, mImageFragment, "images");
+        }else {
+            transaction.show(mImageFragment);
+        }
+        Log.i("fmz","重置Fragment");
+    }
 }
 
 /*
