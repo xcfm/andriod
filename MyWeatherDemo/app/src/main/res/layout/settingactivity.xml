@@ -29,6 +29,12 @@
                 android:layout_height="40dp"
                 android:gravity="center"
                 android:text="更改城市1" />
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/languages"
+                android:spinnerMode="dropdown" />
         </LinearLayout>
 
         <LinearLayout

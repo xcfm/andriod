@@ -2,6 +2,7 @@ package fmz.example.fragment;
 
 import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import fmz.example.R;
 import fmz.example.presenter.FragmentPresenter;
@@ -17,11 +18,21 @@ import rx.functions.Func1;
  */
 public class ImageFragment extends FragmentPresenter<ImagesView> {
 
-
     @Override
     protected void initData() {   //不是懒加载
         super.initData();
         getTitles(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Setting mSetting = Setting.getInstance();
+        if (mSetting.getInt("刷新", 1) != 1) {
+            getTitles(getActivity());
+            mSetting.putInt("刷新",1);
+            Log.i("fmz", "正在刷新标题");
+        }
     }
 
     private void getTitles(Context context) {

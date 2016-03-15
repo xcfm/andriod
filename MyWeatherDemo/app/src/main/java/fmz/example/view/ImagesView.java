@@ -27,11 +27,12 @@ public class ImagesView extends ViewImpl {
         return R.layout.fragment_images;
     }
 
-    public void initViewPager(String[] titles, FragmentManager manager){
+    public void initViewPager(String[] titles, FragmentManager manager) {
         viewpager.setOffscreenPageLimit(titles.length + 1);
         List<String> title = new ArrayList<>();
-        for (String titles1 : titles)
+        for (String titles1 : titles) {
             title.add(titles1);
+        }
         mPagerAdapter = new TabFragmentPagerAdapter(manager, title, 1);
         viewpager.setAdapter(mPagerAdapter);
         tabs.setupWithViewPager(viewpager);

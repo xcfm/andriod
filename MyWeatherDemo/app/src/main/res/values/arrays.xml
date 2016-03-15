@@ -15,6 +15,10 @@
   -->
 
 <resources>
+    <array name="languages">
+        <item>安徽</item>
+        <item>福建</item>
+    </array>
     <array name="images_category_list">
         <item>合肥</item>
         <item>上海</item>

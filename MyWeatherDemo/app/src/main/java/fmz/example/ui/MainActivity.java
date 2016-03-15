@@ -62,7 +62,7 @@ public class MainActivity extends ActivityPresenter<MainView>
     }
 
     private void getBitmap() {
-        Observable.just(R.mipmap.avator)
+        /*Observable.just(R.mipmap.avator)
                 .map(new Func1<Integer, Bitmap>() {
                     @Override
                     public Bitmap call(Integer integer) {
@@ -89,7 +89,7 @@ public class MainActivity extends ActivityPresenter<MainView>
                     public void onNext(Bitmap bitmap) {
                         mView.setAvator(bitmap);
                     }
-                });
+                });*/
         this.setStatusBarColor(R.color.light_grey);
         mSetting.putInt("晴", R.mipmap.type_one_sunny);
         mSetting.putInt("阴", R.mipmap.type_one_cloudy);

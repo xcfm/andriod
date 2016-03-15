@@ -70,6 +70,7 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 }
                 mSetting.putString("城市1", editText1.getText().toString().trim());
                 Toast.makeText(getApplicationContext(), "更改成功", Toast.LENGTH_SHORT).show();
+                mSetting.putInt("刷新",0);
                 //Snackbar.make(mView.getRootView(), "更改成功", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 break;
             case R.id.Setting_button2:
@@ -104,24 +105,12 @@ public class SettingActivity extends ActivityPresenter<SettingView> implements V
                 Toast.makeText(getApplicationContext(), "清除成功", Toast.LENGTH_SHORT).show();
                 break;
             default:
-                resettabs();
                 break;
 
         }
     }
 
-    private void resettabs() {
-        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        ImageFragment mImageFragment = (ImageFragment) manager.findFragmentByTag("images");
-        if (mImageFragment == null) {
-            mImageFragment = new ImageFragment();
-            transaction.add(R.id.container, mImageFragment, "images");
-        }else {
-            transaction.show(mImageFragment);
-        }
-        Log.i("fmz","重置Fragment");
-    }
+
 }
 
 /*

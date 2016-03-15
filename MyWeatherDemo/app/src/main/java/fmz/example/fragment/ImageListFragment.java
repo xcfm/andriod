@@ -38,6 +38,11 @@ public class ImageListFragment extends FragmentPresenter<ImageListView> implemen
         return imageListFragment;
     }
 
+    public void onResume() {
+    super.onResume();
+
+    }
+
     @Override
     protected void lazyData() {
         super.lazyData();
@@ -88,8 +93,8 @@ public class ImageListFragment extends FragmentPresenter<ImageListView> implemen
                         Weather.ResultEntity.TodayEntity todayEntiry = weather.getResult().getToday();
                         Log.i("fmz", "onNext: 城市:" + todayEntiry.getCity() + " 温度:" + todayEntiry.getTemperature());
                         ArrayList<Bean> Futures = new ArrayList<>();
-                        ArrayList<Weather.ResultEntity.FutureEntity> abc= (ArrayList<Weather.ResultEntity.FutureEntity>) weather.getResult().getFuture();
-                        int a=abc.size();
+                        ArrayList<Weather.ResultEntity.FutureEntity> abc = (ArrayList<Weather.ResultEntity.FutureEntity>) weather.getResult().getFuture();
+                        int a = abc.size();
                         for (int i = 0; i <= a; i++) {
                             Bean bean = new Bean(weather, i);
                             Futures.add(bean);
